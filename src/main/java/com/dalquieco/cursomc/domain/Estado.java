@@ -8,15 +8,11 @@ import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
-import javax.persistence.JoinColumn;
-import javax.persistence.JoinTable;
-import javax.persistence.ManyToMany;
-
-import com.fasterxml.jackson.annotation.JsonBackReference;
+import javax.persistence.OneToMany;
 
 @Entity
-public class Produto implements Serializable{
-
+public class Estado implements Serializable {
+	
 
 	private static final long serialVersionUID = 1L;
 	
@@ -24,25 +20,18 @@ public class Produto implements Serializable{
 	@GeneratedValue(strategy =GenerationType.IDENTITY)
 	private Integer id;
 	private String name;
-	private Double price;
 	
-	@JsonBackReference
-	@ManyToMany
-	@JoinTable(name = "PRODUTO_CATEGORIA",
-			joinColumns = @JoinColumn( name = "produto_id"),
-			inverseJoinColumns = @JoinColumn( name = "categoria_id")
-			)
-	private List<Categoria> categorias = new ArrayList<>();
+	@OneToMany(mappedBy="estado")
+	private List<Cidade> cidades = new ArrayList<>();
 	
-	public Produto() {
+	public Estado() {
 		
 	}
 
-	public Produto(Integer id, String name, Double price) {
+	public Estado(Integer id, String name) {
 		super();
 		this.id = id;
 		this.name = name;
-		this.price = price;
 	}
 
 	public Integer getId() {
@@ -61,20 +50,12 @@ public class Produto implements Serializable{
 		this.name = name;
 	}
 
-	public Double getPrice() {
-		return price;
+	public List<Cidade> getCidades() {
+		return cidades;
 	}
 
-	public void setPrice(Double price) {
-		this.price = price;
-	}
-
-	public List<Categoria> getCategorias() {
-		return categorias;
-	}
-
-	public void setCategorias(List<Categoria> categorias) {
-		this.categorias = categorias;
+	public void setCidades(List<Cidade> cidades) {
+		this.cidades = cidades;
 	}
 
 	@Override
@@ -93,7 +74,7 @@ public class Produto implements Serializable{
 			return false;
 		if (getClass() != obj.getClass())
 			return false;
-		Produto other = (Produto) obj;
+		Estado other = (Estado) obj;
 		if (id == null) {
 			if (other.id != null)
 				return false;
@@ -102,5 +83,5 @@ public class Produto implements Serializable{
 		return true;
 	}
 	
-	
+
 }
