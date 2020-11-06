@@ -1,18 +1,19 @@
 package com.dalquieco.cursomc.domain;
 
 import java.io.Serializable;
+import java.util.Date;
 
+import javax.persistence.CascadeType;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
-
-import com.fasterxml.jackson.annotation.JsonManagedReference;
+import javax.persistence.OneToOne;
 
 @Entity
-public class Cidade implements Serializable {
+public class Pedido implements Serializable {
 	
 
 	private static final long serialVersionUID = 1L;
@@ -20,22 +21,29 @@ public class Cidade implements Serializable {
 	@Id
 	@GeneratedValue(strategy =GenerationType.IDENTITY)
 	private Integer id;
-	private String name;
+	private Date instante;
 	
-	@JsonManagedReference
+	@OneToOne(cascade=CascadeType.ALL, mappedBy="pedido")
+	private Pagamento pagamento;
+	
 	@ManyToOne
-	@JoinColumn(name= "estado_id")
-	private Estado estado;
+	@JoinColumn(name="cliente_id")
+	private Cliente cliente;
 	
-	public Cidade() {
+	@ManyToOne
+	@JoinColumn(name="endereco_de_entrega_id")
+	private Endereco enderecoDeEntrega;
+	
+	public Pedido() {
 		
 	}
 
-	public Cidade(Integer id, String name, Estado estado) {
+	public Pedido(Integer id, Date instante, Cliente cliente, Endereco enderecoDeEntrega) {
 		super();
 		this.id = id;
-		this.name = name;
-		this.estado = estado;
+		this.instante = instante;
+		this.cliente = cliente;
+		this.enderecoDeEntrega = enderecoDeEntrega;
 	}
 
 	public Integer getId() {
@@ -46,20 +54,20 @@ public class Cidade implements Serializable {
 		this.id = id;
 	}
 
-	public String getName() {
-		return name;
+	public Date getInstante() {
+		return instante;
 	}
 
-	public void setName(String name) {
-		this.name = name;
+	public void setInstante(Date instante) {
+		this.instante = instante;
 	}
 
-	public Estado getEstado() {
-		return estado;
+	public Pagamento getPagamento() {
+		return pagamento;
 	}
 
-	public void setEstado(Estado estado) {
-		this.estado = estado;
+	public void setPagamento(Pagamento pagamento) {
+		this.pagamento = pagamento;
 	}
 
 	@Override
@@ -78,7 +86,7 @@ public class Cidade implements Serializable {
 			return false;
 		if (getClass() != obj.getClass())
 			return false;
-		Cidade other = (Cidade) obj;
+		Pedido other = (Pedido) obj;
 		if (id == null) {
 			if (other.id != null)
 				return false;
