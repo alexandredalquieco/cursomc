@@ -11,6 +11,7 @@ import javax.persistence.MapsId;
 import javax.persistence.OneToOne;
 
 import com.dalquieco.cursomc.domain.enums.TipoPagamento;
+import com.fasterxml.jackson.annotation.JsonIgnore;
 
 @Entity
 @Inheritance(strategy=InheritanceType.JOINED)
@@ -21,8 +22,9 @@ public abstract class Pagamento implements Serializable {
 	
 	@Id
 	private Integer id;
-	private TipoPagamento estado;
+	private Integer estado;
 
+	@JsonIgnore
 	@OneToOne
 	@JoinColumn(name="pedido_id")
 	@MapsId
@@ -35,7 +37,7 @@ public abstract class Pagamento implements Serializable {
 
 	public Pagamento(Integer id, TipoPagamento estado, Pedido pedido) {
 		this.id = id;
-		this.estado = estado;
+		this.estado = estado.getCod();
 		this.pedido = pedido;
 	}
 
@@ -48,11 +50,11 @@ public abstract class Pagamento implements Serializable {
 	}
 
 	public TipoPagamento getEstado() {
-		return estado;
+		return TipoPagamento.toEnum(estado);
 	}
 
 	public void setEstado(TipoPagamento estado) {
-		this.estado = estado;
+		this.estado = estado.getCod();
 	}
 
 	public Pedido getPedido() {
